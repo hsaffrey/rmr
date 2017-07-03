@@ -13,6 +13,7 @@ public class BaseService {
     protected static final String SONGS = "songs";
     protected static final String ALBUMS = "albums";
     protected static final String FIELD_NUMBER = "number";
+    protected static final String FIELD_ALBUM = "album";
     protected static final MongoClient mongo = getClient();
     protected static final DB db = getDb();
 

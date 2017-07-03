@@ -8,6 +8,10 @@ public enum StatusError {
             "ERROR, USER HAS SUBMITTED AN INVALID REQUEST",
             400
     ),
+    BAD_REQUEST_BAD_PAYLOAD(
+            "ERROR, invalid json has been submitted",
+            400
+    ),
     BAD_REQUEST_NAME_PARAM(
             "ERROR, Invalid name parameter in request",
             400
@@ -22,6 +26,10 @@ public enum StatusError {
     ),
     BAD_REQUEST_SONG_WRITERS_PARAM(
             "ERROR, Invalid song writers parameter in request",
+            400
+    ),
+    BAD_REQUEST_RELEASE_DATE_PARAM(
+            "ERROR, Invalid release date parameter in request",
             400
     ),
     BAD_REQUEST_SONG_DOES_NOT_EXIST(

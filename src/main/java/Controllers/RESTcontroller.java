@@ -3,6 +3,7 @@ package Controllers;
 import Models.Album;
 import Models.Song;
 import Models.UtilModels.ServiceResponse;
+import Models.UtilModels.StatusError;
 import Services.AlbumService;
 import Services.SongService;
 import Utils.Constants;
@@ -32,6 +33,14 @@ public class RESTcontroller {
     private static final Gson gson = new Gson();
 
     public RESTcontroller(final AlbumService albumService, final SongService songService){
+
+        before((request, response) -> {
+            if(request.requestMethod().equals(Constants.POST_REQUEST) || request.requestMethod().equals(Constants.PUT_REQUEST)){
+                if(!isJSONValid(request.body())){
+                    halt(StatusError.BAD_REQUEST_BAD_PAYLOAD.getErrorCode(), StatusError.BAD_REQUEST_BAD_PAYLOAD.getErrorMessage());
+                }
+            }
+        });
 
         /*<-------------SONG METHODS------------->*/
 
@@ -94,17 +103,18 @@ public class RESTcontroller {
                 response.status(serviceResponse.getError().getErrorCode());
                 return serviceResponse.getError().getErrorMessage();
             }
-            return serviceResponse.getData().get(0);
-        });
+            return serviceResponse.getData();
+        }, json());
 
         get(GET_ALBUM, (request, response) -> {
-            ServiceResponse serviceResponse = albumService.getAlbum(request.params(NUMBER_PARAM));
+            boolean songs = Boolean.parseBoolean(request.queryParams("songs"));
+            ServiceResponse serviceResponse = albumService.getAlbum(request.params(NUMBER_PARAM), songs);
             if(serviceResponse.hasError()){
                 response.status(serviceResponse.getError().getErrorCode());
                 return serviceResponse.getError().getErrorMessage();
             }
             return serviceResponse.getData();
-        });
+        }, json());
 
         post(CREATE_ALBUM, (request, response) -> {
             Album album = gson.fromJson(request.body(), Album.class);
@@ -114,10 +124,19 @@ public class RESTcontroller {
                 return serviceResponse.getError().getErrorMessage();
             }
             return serviceResponse.getData().get(0);
-        });
+        }, json());
 
         after(((request, response) ->
             response.type(Constants.CONTENT_TYPE)
         ));
+    }
+
+    private static boolean isJSONValid(String jsonInString) {
+        try {
+            gson.fromJson(jsonInString, Object.class);
+            return true;
+        } catch(com.google.gson.JsonSyntaxException ex) {
+            return false;
+        }
     }
 }
