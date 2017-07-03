@@ -10,6 +10,7 @@ import org.mongojack.JacksonDBCollection;
 import spark.utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,7 +36,9 @@ public class AlbumService extends BaseService {
         }
 
         if(songs){
-            album.setSongs(getAlbumSongs(album.getName()));
+            List<Song> albumSongs = getAlbumSongs(album.getName());
+            Collections.sort(albumSongs);
+            album.setSongs(albumSongs);
         }
 
         List<Album> albums = new ArrayList<>();
