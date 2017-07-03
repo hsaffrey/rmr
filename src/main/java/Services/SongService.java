@@ -13,8 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SongService extends BaseService{
-    private static final String SONGS = "songs";
-    private static final String FIELD_NUMBER = "number";
 
     public ServiceResponse getAllSongs(String writers, String album){
         List<Song> allSongs = getSongCollection().find().toArray();
@@ -46,12 +44,12 @@ public class SongService extends BaseService{
         if(StringUtils.isEmpty(songNumber)){
             return new ServiceResponse(StatusError.BAD_REQUEST);
         }
-        List<Song> song = getSongCollection().find(DBQuery.is(FIELD_NUMBER, songNumber)).toArray();
+        List<Song> songs = getSongCollection().find(DBQuery.is(FIELD_NUMBER, songNumber)).toArray();
 
-        if(song.isEmpty()){
-            return new ServiceResponse(StatusError.BAD_REQUEST);
+        if(songs.isEmpty()){
+            return new ServiceResponse(StatusError.BAD_REQUEST_SONG_DOES_NOT_EXIST);
         }
-        return new ServiceResponse(song);
+        return new ServiceResponse(songs);
     }
 
     public ServiceResponse createSong(Song song){
