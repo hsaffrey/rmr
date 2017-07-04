@@ -5,6 +5,7 @@ import Models.Song;
 import Models.UtilModels.ServiceResponse;
 import Models.UtilModels.StatusError;
 import com.mongodb.MongoException;
+import org.apache.log4j.Logger;
 import org.mongojack.DBQuery;
 import org.mongojack.JacksonDBCollection;
 import spark.utils.StringUtils;
@@ -17,6 +18,8 @@ import java.util.List;
  * Created by henry on 2017-07-01.
  */
 public class AlbumService extends BaseService {
+
+    private Logger logger = Logger.getLogger(Album.class);
 
     public ServiceResponse getAllAlbums(){
         List<Album> albums = getAlbumCollection().find().toArray();
@@ -56,7 +59,7 @@ public class AlbumService extends BaseService {
         try{
             getAlbumCollection().insert(album);
         } catch(MongoException e){
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return new ServiceResponse(StatusError.INTERNAL_ERROR);
         }
         List<Album> albums = new ArrayList<>();

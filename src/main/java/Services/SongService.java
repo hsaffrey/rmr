@@ -4,6 +4,7 @@ import Models.Song;
 import Models.UtilModels.ServiceResponse;
 import Models.UtilModels.StatusError;
 import com.mongodb.MongoException;
+import org.apache.log4j.Logger;
 import org.mongojack.DBQuery;
 import org.mongojack.JacksonDBCollection;
 import spark.utils.StringUtils;
@@ -13,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SongService extends BaseService{
+
+    private Logger logger = Logger.getLogger(Song.class);
 
     public ServiceResponse getAllSongs(String writers, String album){
         List<Song> allSongs = getSongCollection().find().toArray();
@@ -69,7 +72,7 @@ public class SongService extends BaseService{
         try{
             getSongCollection().insert(song);
         } catch(MongoException e){
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return new ServiceResponse(StatusError.INTERNAL_ERROR);
         }
 
@@ -102,7 +105,7 @@ public class SongService extends BaseService{
         try{
             getSongCollection().update(DBQuery.is(FIELD_NUMBER, songNumber), updatedSong);
         }catch(MongoException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return new ServiceResponse(StatusError.INTERNAL_ERROR);
         }
 
@@ -121,7 +124,7 @@ public class SongService extends BaseService{
         try{
             getSongCollection().remove(DBQuery.is(FIELD_NUMBER, songNumber));
         }catch(MongoException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             return new ServiceResponse(StatusError.INTERNAL_ERROR);
         }
         return new ServiceResponse(exists);
