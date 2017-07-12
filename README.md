@@ -1,6 +1,6 @@
 # rmr
 
-Run Maggie Run is the best band in the world and of course it therefore needs a backend to keep all of their data. 
+Run Maggie Run is the best band in the world and of course it therefore needs a backend to keep all of their data such as albums, songs and song writers. 
 
 ## Technologies Used:
 
